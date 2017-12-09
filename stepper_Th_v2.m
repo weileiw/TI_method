@@ -4,7 +4,7 @@ load M3d.mat
 load grid.mat
 load inter_results.mat
 p.bf = 0.95;
-figure(1)
+%figure(1)
 dpa = 365; 
 n234 = 10.5/dpa; 
 n230 = 9.19e-6/dpa;
@@ -35,7 +35,7 @@ B = I-(dt/2)*PFdiv_f;
 
 FA = mfactor(A);
 
-nstep = 100*365*24/dt;
+nstep = 100*365/dt;
 for ik = 1:nstep
   
   dd234dt = (U238-d234)*n234-d234*a1+Th4*(a2+d1);
