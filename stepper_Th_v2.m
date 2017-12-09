@@ -1,5 +1,6 @@
 clear all
 close all
+addpath('~/MOCM/WEILEI/myfunc')
 load M3d.mat
 load grid.mat
 load inter_results.mat
@@ -28,14 +29,14 @@ PFdiv_f = buildPFD_cons_SV(M3d,p,grd);
 PFdiv_f(end,end) = PFdiv_f(end-1,end-1);
 
 t = 0;	
-dt = 1/4;
+dt = 1/24;
 I = speye(length(U238));
 A = I+(dt/2)*PFdiv_f;
 B = I-(dt/2)*PFdiv_f;
 
 FA = mfactor(A);
 
-nstep = 100*365/dt;
+nstep = 50*365/dt;
 for ik = 1:nstep
   
   dd234dt = (U238-d234)*n234-d234*a1+Th4*(a2+d1);
@@ -53,8 +54,8 @@ for ik = 1:nstep
   TH4  = mfactor(FA,(B*[2.5;  TH4(2:end)]+dTH4dt*dt));
   TH0  = mfactor(FA,(B*[0.001;TH0(2:end)]+dTH0dt*dt));
   t = t+dt;
-  if mod(ik,4) == 0
-      sprintf('model time is %d days \n', ik/4);
+  if mod(ik,24*5) == 0
+      fprintf('model time is %d days; \n', ik/24);
   end
   %if mod(ik,48) == 0
     
