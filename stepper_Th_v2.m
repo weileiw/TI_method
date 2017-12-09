@@ -2,6 +2,7 @@ clear all
 close all
 load M3d.mat
 load grid.mat
+load inter_results.mat
 p.bf = 0.95;
 figure(1)
 dpa = 365; 
@@ -10,12 +11,12 @@ n230 = 9.19e-6/dpa;
 
 U238   = 2400*ones(24,1);
 U234   = 2760*ones(24,1);
-d230  = 0*ones(24,1);
-d234  = 0*ones(24,1);
-TH4 = 0*ones(24,1); 	
-TH0 = 0*ones(24,1);
-Th4  = 0*ones(24,1);	
-Th0  = 0*ones(24,1);
+%d230  = 0*ones(24,1);
+%d234  = 0*ones(24,1);
+%TH4 = 0*ones(24,1); 	
+%TH0 = 0*ones(24,1);
+%Th4  = 0*ones(24,1);	
+%Th0  = 0*ones(24,1);
 
 k1 = 3/dpa;	  % aggregation
 k2 = 150/dpa; % disagregation	
@@ -133,3 +134,5 @@ for ik = 1:nstep
   
 end
 
+fname = sprintf('Steady_Th234_Th230');
+save(fname,'Th0','Th4','TH0','TH4','d230','d234')
