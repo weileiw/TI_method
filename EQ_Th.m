@@ -75,13 +75,6 @@ n230  = p.n230;
 U238  = p.U238;
 U234  = p.U234;
 
-d234  = p.d234;
-Pf0   = p.Pf0;
-Phs0  = p.Phs0;
-Phf0  = p.Phf0;
-Chls0 = p.Chls0;
-Chlf0 = p.Chlf0;
-
 PFD = buildPFD_cons_SV(M3d,p,grd);
 PFD(24,24) = PFD(23,23);
 
