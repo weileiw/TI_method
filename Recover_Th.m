@@ -4,6 +4,12 @@ load grid.mat
 dpa = 365;
 tmp = M3d;
 
+p.n234 = 10.5/dpa; 
+p.n230 = 9.19e-6/dpa;
+
+p.U238   = 2400*ones(24,1);
+p.U234   = 2760*ones(24,1);
+
 p.Th0   = Th0;
 p.Th4   = Th4;
 p.TH0   = TH0;

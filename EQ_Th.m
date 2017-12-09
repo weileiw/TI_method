@@ -36,28 +36,32 @@ e = [e1;e2;e3;e4;e5;e6];
 %f = 0.5*(e1.'*W*e1+e2.'*W*e2+e3.'*W*e3+e4.'*W*e4+e5.'*W*e5+e6.'*W* ...
 %         e6);%+0.00011*(ep.'*Wp*ep);
 f = 0.5*e.'*W*e;
-     D = [D(1:24,:)/p.d234_std;...
-          D(25:48,:)/p.Th4_std;...
-          D(49:72,:)/p.TH4_std;...
-          D(73:96,:)/p.d230_std;...
-          D(97:120,:)/p.Th0_std;...
-          D(121:144,:)/p.TH0_std];
- dpdx = diag(exp(x));
- dedx = D*dpdx;
- dfdx = e.'*W*dedx;
- D2 = [D2(1:24,:)/p.d234_std;...
-       D2(25:48,:)/p.Th4_std;...
-       D2(49:72,:)/p.TH4_std;...
-       D2(73:96,:)/p.d230_std;...
-       D2(97:120,:)/p.Th0_std;...
-       D2(121:144,:)/p.TH0_std];
- H(1,:) = e.'*W*(D2(:,1:5));
- H(2,:) = e.'*W*(D2(:,6:10));
- H(3,:) = e.'*W*(D2(:,11:15));
- H(4,:) = e.'*W*(D2(:,16:20));
- 
- H = 0.5*dpdx*(H+H.')*dpdx+diag(e.'*W*dedx);
- d2fdx2 = dedx.'*W*dedx+H;
+D = [D(1:24,:)/p.d234_std;...
+     D(25:48,:)/p.Th4_std;...
+     D(49:72,:)/p.TH4_std;...
+     D(73:96,:)/p.d230_std;...
+     D(97:120,:)/p.Th0_std;...
+     D(121:144,:)/p.TH0_std];
+
+dpdx = diag(exp(x));
+dedx = D*dpdx;
+dfdx = e.'*W*dedx;
+
+D2 = [D2(1:24,:)/p.d234_std;...
+      D2(25:48,:)/p.Th4_std;...
+      D2(49:72,:)/p.TH4_std;...
+      D2(73:96,:)/p.d230_std;...
+      D2(97:120,:)/p.Th0_std;...
+      D2(121:144,:)/p.TH0_std];
+
+H(1,:) = e.'*W*(D2(:,1:5));
+H(2,:) = e.'*W*(D2(:,6:10));
+H(3,:) = e.'*W*(D2(:,11:15));
+H(4,:) = e.'*W*(D2(:,16:20));
+H(5,:) = e.'*W*(D2(:,21:25));
+
+H = 0.5*dpdx*(H+H.')*dpdx+diag(e.'*W*dedx);
+d2fdx2 = dedx.'*W*dedx+H;
 keyboard
 function [M,D,D2] = Th_cycle(p,grd,M3d)
 
@@ -66,16 +70,17 @@ k2 = p.disagregation;
 r  = p.remineralization;
 a  = p.adsorption;
 d  = p.desorption;
+n234  = p.n234;
+n230  = p.n230;
+U238  = p.U238;
+U234  = p.U234;
 
-d2340 = p.d2340;
-Pf0 = p.Pf0;
-Phs0 = p.Phs0;
-Phf0 = p.Phf0;
+d234  = p.d234;
+Pf0   = p.Pf0;
+Phs0  = p.Phs0;
+Phf0  = p.Phf0;
 Chls0 = p.Chls0;
 Chlf0 = p.Chlf0;
-tmp = M3d;
-tmp(:,:,4:end) = 0;
-itop = find(tmp(:));
 
 PFD = buildPFD_cons_SV(M3d,p,grd);
 PFD(24,24) = PFD(23,23);
