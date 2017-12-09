@@ -53,7 +53,9 @@ for ik = 1:nstep
   TH4  = mfactor(FA,(B*[2.5;  TH4(2:end)]+dTH4dt*dt));
   TH0  = mfactor(FA,(B*[0.001;TH0(2:end)]+dTH0dt*dt));
   t = t+dt;
-  
+  if mod(ik,4) == 0
+      sprintf('model time is %d days \n', ik/4);
+  end
   %if mod(ik,48) == 0
     
     %set(0,'CurrentFigure',1);
