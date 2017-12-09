@@ -25,14 +25,14 @@ a1 = 0.5/dpa; % adsorption
 a2 = 2/dpa;   % desorption
 d1 = 1/dpa;   % remineralization
               %p.k2 = k2;
-PFdiv_f = buildPFD_cons_SV(M3d,p,grd);
-PFdiv_f(end,end) = PFdiv_f(end-1,end-1);
+PFD = buildPFD_cons_SV(M3d,p,grd);
+PFD(end,end) = PFD(end-1,end-1);
 
 t = 0;	
 dt = 1/24;
 I = speye(length(U238));
-A = I+(dt/2)*PFdiv_f;
-B = I-(dt/2)*PFdiv_f;
+A = I+(dt/2)*PFD;
+B = I-(dt/2)*PFD;
 
 FA = mfactor(A);
 
