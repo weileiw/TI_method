@@ -1,7 +1,8 @@
 function [f,dfdx,d2fdx2] = EQ_Th(x,p,grd,M3d,dVt)
 
 nip = length(x);
-
+%dx = eps^2*sqrt(-1)*speye(nip);
+%x = x+dx(:,1);
 p.aggregation      = exp(x(1));
 p.disagregation    = exp(x(2));
 p.remineralization = exp(x(3));
@@ -62,7 +63,7 @@ H(5,:) = e.'*W*(D2(:,21:25));
 
 H = 0.5*dpdx*(H+H.')*dpdx+diag(e.'*W*dedx);
 d2fdx2 = dedx.'*W*dedx+H;
-keyboard
+
 function [M,D,D2] = Th_cycle(p,grd,M3d)
 
 k1 = p.aggregation;
@@ -78,9 +79,9 @@ U234  = p.U234;
 PFD = buildPFD_cons_SV(M3d,p,grd);
 PFD(24,24) = PFD(23,23);
 
-I = speye(length(d234));
-INIT_4 = [  2.5,0*U238(2:end)];
-INIT_0 = [0.001,0*U234(2:end)];
+I = speye(length(U234));
+INIT_4 = [  2.5;0*U238(2:end)];
+INIT_0 = [0.001;0*U234(2:end)];
 
 rhs = [U238*n234;0*U238;INIT_4;U234*n230;0*U234;INIT_0];
 
@@ -132,13 +133,13 @@ dJdr = [[0*I,  -I, 0*I, 0*I, 0*I, 0*I];...
 
 D = mfactor(FJ,-[dJdk1*M,...
 	         dJdk2*M,...
+		 dJdr*M,...
 		 dJda*M,...
-		 dJdd*M,...
-                 dJdr*M]);
+                 dJdd*M]);
 
 D2 = mfactor(FJ,[-2*dJdk1*D,...
 	         -2*dJdk2*D,...
+		 -2*dJdr*D,...
 		 -2*dJda*D,...
-		 -2*dJdd*D,...
-                 -2*dJdr*D]);
+                 -2*dJdd*D]);
 

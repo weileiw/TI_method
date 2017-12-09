@@ -13,7 +13,7 @@ p.U234   = 2760*ones(24,1);
 p.Th0   = Th0;
 p.Th4   = Th4;
 p.TH0   = TH0;
-p.TH4   = TH4
+p.TH4   = TH4;
 p.d230  = d230;
 p.d234  = d234;
 
