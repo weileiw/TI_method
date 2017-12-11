@@ -3,7 +3,7 @@ close all
 addpath('~/MOCM/WEILEI/myfunc')
 load M3d.mat
 load grid.mat
-load inter_results.mat
+load Steady_Th234_Th230.mat
 p.bf = 0.95;
 %figure(1)
 dpa = 365; 
@@ -12,6 +12,8 @@ n230 = 9.19e-6/dpa;
 
 U238   = 2400*ones(24,1);
 U234   = 2760*ones(24,1);
+P_l    = zeros(24,1);
+P_s    = P_l;
 %d230  = 0*ones(24,1);
 %d234  = 0*ones(24,1);
 %TH4 = 0*ones(24,1); 	
@@ -19,45 +21,52 @@ U234   = 2760*ones(24,1);
 %Th4  = 0*ones(24,1);	
 %Th0  = 0*ones(24,1);
 
-k1 = 3/dpa;	  % aggregation
+k1 = 3/dpa;   % aggregation
 k2 = 150/dpa; % disagregation	
-a1 = 0.5/dpa; % adsorption
-a2 = 2/dpa;   % desorption
-d1 = 1/dpa;   % remineralization
+a  = 0.5/dpa; % adsorption
+d  = 2/dpa;   % desorption
+r  = 1/dpa;   % remineralization
               %p.k2 = k2;
 PFD = buildPFD_cons_SV(M3d,p,grd);
 PFD(end,end) = PFD(end-1,end-1);
 
-t = 0;	
+t  = 0;	
 dt = 1/24;
-I = speye(length(U238));
-A = I+(dt/2)*PFD;
-B = I-(dt/2)*PFD;
+I  = speye(length(U238));
+A  = I+(dt/2)*PFD;
+B  = I-(dt/2)*PFD;
 
 FA = mfactor(A);
 
 nstep = 50*365/dt;
 for ik = 1:nstep
-  
-  dd234dt = (U238-d234)*n234-d234*a1+Th4*(a2+d1);
-  dTh4dt = d234*a1+TH4*k2-Th4*(k1+d1+a2+n234);
-  dTH4dt = Th4*k1-TH4*(k2+n234);
-  
-  dd230dt = (U234-d230)*n230-d230*a1+Th0*(a2+d1); 
-  dTh0dt = d230*a1+TH0*k2-Th0*(k1+d1+a2+n230);
-  dTH0dt = Th0*k1-TH0*(k2+n230);
-  
-  d234 = d234+dd234dt*dt;
-  d230 = d230+dd230dt*dt;
-  Th4 = Th4+dTh4dt*dt;
-  Th0 = Th0+dTh0dt*dt;
-  TH4  = mfactor(FA,(B*[2.5;  TH4(2:end)]+dTH4dt*dt));
-  TH0  = mfactor(FA,(B*[0.001;TH0(2:end)]+dTH0dt*dt));
-  t = t+dt;
-  if mod(ik,24*5) == 0
-      fprintf('model time is %d days; \n', ik/24);
-  end
-  %if mod(ik,48) == 0
+    
+    dP_sdt  = P_l*k2 - P_s*(k1+r);
+    dP_ldt  = P_s*k1 - P_l*k2;%+[1e-6;0*P_s(2:end)];  
+    
+    dd234dt = (U238-d234)*n234-d234*a+Th4*(d+r);
+    dTh4dt  = d234*a+TH4*k2-Th4*(k1+r+d+n234);
+    dTH4dt  = Th4*k1-TH4*(k2+n234);%+[2.5; 0*TH4(2:end)];
+    
+    dd230dt = (U234-d230)*n230-d230*a+Th0*(d+r); 
+    dTh0dt  = d230*a+TH0*k2-Th0*(k1+r+d+n230);
+    dTH0dt  = Th0*k1-TH0*(k2+n230);%+[0.001;0*TH0(2:end)];
+    
+    P_s  = P_s+dP_sdt*dt;
+    d234 = d234+dd234dt*dt;
+    d230 = d230+dd230dt*dt;
+    Th4  = Th4+dTh4dt*dt;
+    Th0  = Th0+dTh0dt*dt;
+
+    P_l  = mfactor(FA,(B*[1e-6;P_l(2:end)]+dP_ldt*dt));
+    TH4  = mfactor(FA,(B*[ 2.5;TH4(2:end)]+dTH4dt*dt));
+    TH0  = mfactor(FA,(B*[1e-3;TH0(2:end)]+dTH0dt*dt));
+
+    t = t+dt;
+    if mod(ik,24*50) == 0
+        fprintf('model time is %d days; \n', ik/24);
+    end
+    %if mod(ik,48) == 0
     
     %set(0,'CurrentFigure',1);
     %subplot(3,2,1)
@@ -138,4 +147,4 @@ for ik = 1:nstep
 end
 
 fname = sprintf('Steady_Th234_Th230');
-save(fname,'Th0','Th4','TH0','TH4','d230','d234')
+save(fname,'Th0','Th4','TH0','TH4','d230','d234','P_l','P_s')

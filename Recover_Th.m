@@ -16,6 +16,8 @@ p.TH0   = TH0;
 p.TH4   = TH4;
 p.d230  = d230;
 p.d234  = d234;
+p.P_s   = P_s;
+p.P_l   = P_l;
 
 p.Th0_n   = Th0.*(1+0.25*randn(24,1));
 p.Th4_n   = Th4.*(1+0.25*randn(24,1));
@@ -23,6 +25,8 @@ p.TH0_n   = TH0.*(1+0.25*randn(24,1));
 p.TH4_n   = TH4.*(1+0.25*randn(24,1));
 p.d230_n  = d230.*(1+0.25*randn(24,1));
 p.d234_n  = d234.*(1+0.25*randn(24,1));
+p.P_s_n   = P_s.*(1+0.25*randn(24,1));
+p.P_l_n   = P_l.*(1+0.25*randn(24,1));
 
 p.Th0_std  = std(p.Th0_n);
 p.Th4_std  = std(p.Th4_n);
@@ -30,6 +34,8 @@ p.TH0_std  = std(p.TH0_n);
 p.TH4_std  = std(p.TH4_n);
 p.d230_std = std(p.d230_n);
 p.d234_std = std(p.d234_n);
+p.P_s_std = std(p.P_s_n);
+p.P_l_std = std(p.P_l_n);
 
 dVt = grd.DZT3d.*grd.DXT3d.*grd.DYT3d;
 
